@@ -1,24 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "./App.css";
+import Header from "./Components/Header";
+import MainPage from "./Pages/MainPage.jsx";
+import { axiosRequest } from "./Components/Axios";
+import React, { useEffect, useState } from "react";
+import ReactContext from "./Components/Context";
+import Beers from "./Pages/Beers";
+import RandomBeer from "./Pages/RandomBeer";
+import SpecificBeer from "./Pages/SpecificBeer";
+import NewBeer from './Pages/NewBeer'
 
 function App() {
+  const [appState, setAppState] = useState();
+
+  useEffect(() => {
+    axiosRequest.getAllBeers().then((res) => {
+      return setAppState(res.data);
+    });
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <ReactContext.Provider value={appState}>
+        <div className="App">
+          <Routes>
+            <Route path="/" element={<MainPage />} />
+            <Route path="/beers" element={<Beers />} />
+            <Route path="/beers/:id" element={<SpecificBeer />} />
+            <Route path="/random" element={<RandomBeer />} />
+            <Route path="/new-beer" element={<NewBeer />} />
+          </Routes>
+        </div>
+      </ReactContext.Provider>
+    </BrowserRouter>
   );
 }
 
