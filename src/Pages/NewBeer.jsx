@@ -12,15 +12,17 @@ function NewBeer() {
     description: "",
     first_brewed: "",
     brewers_tips: "",
-    attenuation_level: 0,
+    attenuation_level: '',
     contributed_by: "",
   };
   const [newBeerState, setNewBeersState] = useState(initValue);
+  const [messageState, setMessageState] = useState(false); 
 
   const submithandler = (e) => {
     e.preventDefault();
     axiosRequest.postNewBeer(newBeerState).then((res) => console.log(res));
-    
+    setNewBeersState(initValue);
+    setMessageState(true); 
   };
 
   const onChangHandler = (e) => {
@@ -36,21 +38,32 @@ function NewBeer() {
   return (
     <>
       <Header />
-      <form
+     { !messageState && <form
         style={{ display: "flex", flexDirection: "column" }}
         onSubmit={submithandler}
       >
         <label>
           Name
-          <input name="name" type="text" onChange={onChangHandler} />
+          <input
+            value={newBeerState.name}
+            name="name"
+            type="text"
+            onChange={onChangHandler}
+          />
         </label>
         <label>
           TagLine
-          <input name="tagline" type="text" onChange={onChangHandler} />
+          <input
+            name="tagline"
+            type="text"
+            onChange={onChangHandler}
+            value={newBeerState.tagline}
+          />
         </label>
         <label>
           Description
           <textarea
+            value={newBeerState.description}
             name="description"
             id=""
             cols="30"
@@ -61,11 +74,21 @@ function NewBeer() {
 
         <label>
           FirstBrewed
-          <input name="first_brewed" type="text" onChange={onChangHandler} />
+          <input
+            value={newBeerState.first_brewed}
+            name="first_brewed"
+            type="text"
+            onChange={onChangHandler}
+          />
         </label>
         <label>
           BrewersTips
-          <input name="brewers_tips" type="text" onChange={onChangHandler} />
+          <input
+            name="brewers_tips"
+            type="text"
+            onChange={onChangHandler}
+            value={newBeerState.brewers_tips}
+          />
         </label>
         <label>
           AttentionLevel
@@ -73,14 +96,21 @@ function NewBeer() {
             name="attenuation_level"
             type="number"
             onChange={onChangHandler}
+            value={newBeerState.attenuation_level}
           />
         </label>
         <label>
           ContributedBy
-          <input name="contributed_by" type="text" onChange={onChangHandler} />
+          <input
+            value={newBeerState.contributed_by}
+            name="contributed_by"
+            type="text"
+            onChange={onChangHandler}
+          />
         </label>
         <button type="submit">Create !</button>
-      </form>
+      </form>}
+      {messageState && <h1>"Beer added !"</h1>}
     </>
   );
 }
